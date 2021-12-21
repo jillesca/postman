@@ -1,0 +1,168 @@
+{
+  "info": {
+    "_postman_id": "43ca89e0-b7a0-4257-bef5-5473a95d447f",
+    "name": "DNAC Experiments",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "get Token",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "895b686d-bc9f-4780-afd3-ecd776097cab",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "18cf8026-5bd8-486d-bd2e-e4078e357ba0",
+            "exec": [
+              "let jsonData = JSON.parse(responseBody);",
+              "pm.environment.set(\"token\", jsonData.Token);",
+              "console.log(\"this is a test\", jsonData.token);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "_postman_id": "58b1a778-a958-4877-b702-15887d6f6a13",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": {
+            "password": "{{dnac_pass}}",
+            "username": "{{dnac_user}}"
+          }
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "content-type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "https://{{dnac_internal_ip}}/dna/system/api/v1/auth/token"
+      },
+      "response": []
+    },
+    {
+      "name": "Site Count",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "a97f4887-d45e-4f7d-9b74-724e460d55da",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "eefe7b2c-41a0-4f20-a8df-4d5dec16d350",
+            "exec": [
+              "let jsonData = JSON.parse(responseBody);",
+              "console.log(\"number of sites are: \", jsonData.response);",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "_postman_id": "de6e18d0-d0e8-4671-883c-501bd9176463",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-Auth-Token",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": "https://{{dnac_internal_ip}}/dna/intent/api/v1/site/count"
+      },
+      "response": []
+    },
+    {
+      "name": "devices list",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "1c87a904-e31f-4f3f-ae76-f5efc6a68ba9",
+            "exec": [
+              "let devices_list = JSON.parse(responseBody);",
+              "let summary = {}",
+              "devices_list.response.forEach(el => {",
+              "    !(el.type in summary) ? summary[el.type] = 1 : summary[el.type] += 1  ",
+              "    // if (!(el.type in summary)) {",
+              "    //     summary[el.type] = 0",
+              "    // }",
+              "    // summary[el.type] += 1 ",
+              "});",
+              "console.log(\"devices on DNAC: \", summary);",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "_postman_id": "829879d1-a2fe-4047-90ba-7b40658115a4",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-Auth-Token",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": "https://{{dnac_internal_ip}}/dna/intent/api/v1/network-device"
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "5c3d8f6f-5015-4477-9676-ff78bc69effe",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "65d561ae-3c6b-49b1-9231-44799e635afd",
+        "type": "text/javascript",
+        "exec": [
+          "console.log(pm.response.json())"
+        ]
+      }
+    }
+  ]
+}
